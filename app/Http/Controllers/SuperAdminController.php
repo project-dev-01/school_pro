@@ -13,4 +13,8 @@ class SuperAdminController extends Controller
     function settings(){
         return view('super_admin.settings.index');
     }
+    function classes(){
+        return view('super_admin.classes.index');
+    }
+    
 }

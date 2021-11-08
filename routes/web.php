@@ -38,6 +38,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['prefix' => 'super_admin', 'middleware' => ['isSuperAdmin', 'auth', 'PreventBackHistory']], function () {
     Route::get('dashboard', [SuperAdminController::class, 'index'])->name('super_admin.dashboard');
+    Route::get('classes', [SuperAdminController::class, 'classes'])->name('super_admin.classes');
     Route::get('settings',[SuperAdminController::class,'settings'])->name('super_admin.settings');
 });
 

@@ -54,6 +54,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('super_admin.classes')}}" class="nav-link {{ (request()->is('super_admin/classes*')) ? 'active' : '' }}">
+                        <i data-feather="clipboard" class="icon-dual"></i>
+                        <span> Classes </span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('super_admin.settings')}}" class="nav-link {{ (request()->is('super_admin/settings*')) ? 'active' : '' }}">
                         <i data-feather="settings" class="icon-dual"></i>
                         <span> Settings </span>

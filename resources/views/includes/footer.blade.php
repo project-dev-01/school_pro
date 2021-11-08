@@ -27,12 +27,19 @@
 
 <!-- Plugins js-->
 <script src="{{ asset('libs/flatpickr/flatpickr.min.js') }}"></script>
-<script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
+<!-- <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script> -->
 
 <script src="{{ asset('libs/selectize/js/standalone/selectize.min.js') }}"></script>
 
 <!-- Dashboar 1 init js-->
-<script src="{{ asset('js/pages/dashboard-1.init.js') }}"></script>
+<!-- <script src="{{ asset('js/pages/dashboard-1.init.js') }}"></script> -->
 
 <!-- App js-->
 <script src="{{ asset('js/app.min.js') }}"></script>
+
+<script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('datatable/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('datatable/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('sweetalert2/sweetalert2.min.js') }}"></script>
+<script src="{{ asset('toastr/toastr.min.js') }}"></script>
