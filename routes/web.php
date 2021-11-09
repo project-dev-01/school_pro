@@ -39,7 +39,13 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::group(['prefix' => 'super_admin', 'middleware' => ['isSuperAdmin', 'auth', 'PreventBackHistory']], function () {
     Route::get('dashboard', [SuperAdminController::class, 'index'])->name('super_admin.dashboard');
     Route::get('classes', [SuperAdminController::class, 'classes'])->name('super_admin.classes');
-    Route::get('settings',[SuperAdminController::class,'settings'])->name('super_admin.settings');
+    Route::get('classes/add_class', [SuperAdminController::class, 'addClasses'])->name('super_admin.add_classes');
+    Route::get('classes/list', [SuperAdminController::class, 'getClassList'])->name('classes.list');
+    Route::post('classes/add', [SuperAdminController::class, 'addClass'])->name('classes.add');
+    Route::get('classes/edit/{id}', [SuperAdminController::class, 'editClass'])->name('classes.edit');
+    Route::post('classes/update', [SuperAdminController::class, 'updateClass'])->name('classes.update');
+    Route::post('classes/delete', [SuperAdminController::class, 'deleteClass'])->name('classes.delete');
+    Route::get('settings', [SuperAdminController::class, 'settings'])->name('super_admin.settings');
 });
 
 Route::group(['prefix' => 'staff', 'middleware' => ['isStaff', 'auth', 'PreventBackHistory']], function () {

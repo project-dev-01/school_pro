@@ -11,7 +11,7 @@
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item active">List</li>
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Add Class</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('super_admin.add_classes')}}">Add Class</a></li>
                     </ol>
                 </div>
                 <h4 class="page-title">Classes</h4>
@@ -25,30 +25,24 @@
             <div class="card-box">
                 <h4 class="header-title">Class</h4>
                 <p class="sub-header">
-                    <div class="form-group pull-right">
-                        <div class="col-xs-2 col-sm-2">
-                                <a href="#" class="btn btn-primary btn-rounded waves-effect waves-light">Add Class</a>
-                        </div>
+                <div class="form-group pull-right">
+                    <div class="col-xs-2 col-sm-2">
+                        <a href="{{ route('super_admin.add_classes')}}" class="btn btn-primary btn-rounded waves-effect waves-light">Add Class</a>
                     </div>
+                </div>
                 </p>
 
                 <div class="table-responsive">
-                    <table class="table mb-0">
+                    <table class="table mb-0" id="class-table">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Username</th>
+                                <th>Class Name</th>
+                                <th>Teacher Name</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>

@@ -11,7 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
-    
+
     <!-- jquery -->
     <script src="{{ asset('jquery/jquery-3.6.0.min.js') }}"></script>
 
@@ -34,5 +34,9 @@
     <link rel="stylesheet" href="{{ asset('datatable/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('sweetalert2/sweetalert2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('toastr/toastr.min.css') }}">
-
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
 </head>
