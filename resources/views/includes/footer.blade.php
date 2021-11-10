@@ -52,122 +52,18 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+    // class routes
+    var classList = "{{ route('classes.list') }}";
+    var classes = "{{ route('super_admin.classes')}}";
+    var deleteClasses = "{{ route('classes.delete')}}";
+    // users routes
+    var userList = "{{ route('users.user_list') }}";
+    var userShow = "{{ route('users.user') }}";
+    var deleteUser = "{{ route('users.delete') }}";
+
+
+
 </script>
-<script>
-    $(document).ready(function() {
-        
-        $("#classesForm,#classesUpdateForm").on("submit", function(e) {
-            e.preventDefault();
-            var form = this;
-            $.ajax({
-                url: $(form).attr('action'),
-                method: $(form).attr('method'),
-                data: new FormData(form),
-                processData: false,
-                dataType: 'json',
-                contentType: false,
-                beforeSend: function() {
-                    $(form).find('span.error-text').text('');
-                },
-                success: function(data) {
-
-                    console.log("data")
-                    console.log(data)
-                    if (data.code == 0) {
-                        $.each(data.error, function(prefix, val) {
-                            $(form).find('span.' + prefix + '_error').text(val[0]);
-                        });
-                    } else {
-                        // $(form)[0].reset();
-                        //  alert(data.msg);
-                        // $('#counties-table').DataTable().ajax.reload(null, false);
-                        toastr.success(data.msg);
-                        setTimeout(function() {
-                            window.location.href = "{{ route('super_admin.classes')}}";
-                        }, 2000);
-
-                    }
-                }
-            });
-        });
-
-        // delete form
-        $(document).on('click', '#deleteClassBtn', function() {
-            var class_id = $(this).data('id');
-            console.log(class_id);
-            var url = '<?= route("classes.delete") ?>';
-            swal.fire({
-                title: 'Are you sure?',
-                html: 'You want to <b>delete</b> this class',
-                showCancelButton: true,
-                showCloseButton: true,
-                cancelButtonText: 'Cancel',
-                confirmButtonText: 'Yes, Delete',
-                cancelButtonColor: '#d33',
-                confirmButtonColor: '#556ee6',
-                width: 400,
-                allowOutsideClick: false
-            }).then(function(result) {
-                if (result.value) {
-                    $.post(url, {
-                        class_id: class_id
-                    }, function(data) {
-                        if (data.code == 1) {
-                            $('#class-table').DataTable().ajax.reload(null, false);
-                            toastr.success(data.msg);
-                        } else {
-                            toastr.error(data.msg);
-                        }
-                    }, 'json');
-                }
-            });
-        });
-
-    });
-</script>
-<script>
-    //GET ALL CLASSES
-    var table = $('#class-table').DataTable({
-        processing: true,
-        info: true,
-        ajax: "{{ route('classes.list') }}",
-        "pageLength": 5,
-        "aLengthMenu": [
-            [5, 10, 25, 50, -1],
-            [5, 10, 25, 50, "All"]
-        ],
-        columns: [
-            //  {data:'id', name:'id'},
-            // {
-            //     data: 'checkbox',
-            //     name: 'checkbox',
-            //     orderable: false,
-            //     searchable: false
-            // },
-            {
-                data: 'DT_RowIndex',
-                name: 'DT_RowIndex'
-            },
-            {
-                data: 'classes',
-                name: 'classes'
-            },
-            {
-                data: 'name',
-                name: 'name'
-            },
-            {
-                data: 'actions',
-                name: 'actions',
-                orderable: false,
-                searchable: false
-            },
-        ]
-    }).on('draw', function() {
-        $('input[name="country_checkbox"]').each(function() {
-            this.checked = false;
-        });
-        $('input[name="main_checkbox"]').prop('checked', false);
-        $('button#deleteAllBtn').addClass('d-none');
-    });
-</script>
+<!-- custom js  -->
+<script src="{{ asset('js/custom/classes.js') }}"></script>
+<script src="{{ asset('js/custom/user_list.js') }}"></script>

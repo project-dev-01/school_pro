@@ -60,6 +60,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('users.user')}}" class="nav-link {{ (request()->is('super_admin/users*')) ? 'active' : '' }}">
+                        <i data-feather="user" class="icon-dual"></i>
+                        <span> User List </span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('super_admin.settings')}}" class="nav-link {{ (request()->is('super_admin/settings*')) ? 'active' : '' }}">
                         <i data-feather="settings" class="icon-dual"></i>
                         <span> Settings </span>

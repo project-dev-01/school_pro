@@ -38,6 +38,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['prefix' => 'super_admin', 'middleware' => ['isSuperAdmin', 'auth', 'PreventBackHistory']], function () {
     Route::get('dashboard', [SuperAdminController::class, 'index'])->name('super_admin.dashboard');
+
+    // class routes
     Route::get('classes', [SuperAdminController::class, 'classes'])->name('super_admin.classes');
     Route::get('classes/add_class', [SuperAdminController::class, 'addClasses'])->name('super_admin.add_classes');
     Route::get('classes/list', [SuperAdminController::class, 'getClassList'])->name('classes.list');
@@ -45,6 +47,16 @@ Route::group(['prefix' => 'super_admin', 'middleware' => ['isSuperAdmin', 'auth'
     Route::get('classes/edit/{id}', [SuperAdminController::class, 'editClass'])->name('classes.edit');
     Route::post('classes/update', [SuperAdminController::class, 'updateClass'])->name('classes.update');
     Route::post('classes/delete', [SuperAdminController::class, 'deleteClass'])->name('classes.delete');
+
+    // userlist routes
+    Route::get('users/user', [SuperAdminController::class, 'users'])->name('users.user');
+    Route::get('users/add', [SuperAdminController::class, 'addUsers'])->name('users.add');
+    Route::post('users/add_user', [SuperAdminController::class, 'addRoleUser'])->name('users.add_role_user');
+    Route::get('users/edit/{id}', [SuperAdminController::class, 'editUser'])->name('users.edit');
+    Route::get('users/user_list', [SuperAdminController::class, 'getUserList'])->name('users.user_list');
+    Route::post('users/delete', [SuperAdminController::class, 'deleteUser'])->name('users.delete');
+
+    // settings
     Route::get('settings', [SuperAdminController::class, 'settings'])->name('super_admin.settings');
 });
 

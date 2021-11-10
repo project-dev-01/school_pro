@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classes;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use DataTables;
+use Illuminate\Support\Facades\Hash;
 
 class SuperAdminController extends Controller
 {
@@ -114,4 +116,100 @@ class SuperAdminController extends Controller
             return response()->json(['code' => 0, 'msg' => 'Something went wrong']);
         }
     }
+
+    // users page
+    function users()
+    {
+        return view('super_admin.users.index');
+    }
+
+    // get users details
+    public function getUserList(Request $request)
+    {
+        // $users = User::all();
+        // dd($users);
+        $users = User::join('roles', 'users.role_id', '=', 'roles.role_id')
+            ->where('users.role_id','!=',1)
+            ->get(['users.id','users.name', 'users.role_id', 'roles.role_name', 'roles.role_slug']);
+            // dd($users);
+        return DataTables::of($users)
+            ->addIndexColumn()
+            ->addColumn('actions', function ($row) {
+                return '<div class="button-list">
+                                <a href="javascript:void(0)" class="btn btn-danger waves-effect waves-light" data-id="' . $row['id'] . '" id="deleteUserBtn">Delete</a>
+                        </div>';
+            })
+            // <a href="' . route('users.edit', $row['id']) . '" class="btn btn-blue waves-effect waves-light" data-id="' . $row['id'] . '">Update</a>
+
+            ->rawColumns(['actions', 'checkbox'])
+            ->make(true);
+    }
+    // show user page
+    function addUsers()
+    {
+        $roleDetails = Role::select('role_id', 'role_name')->where('role_id','!=',1)->get();
+        return view('super_admin.users.add', ['roleDetails' => $roleDetails]);
+    }
+    // add roleUser
+    function addRoleUser(Request $request){
+
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required',
+            'role_name' => 'required',
+            'password' => 'required',
+            'email' => 'required|unique:users',
+            // 'student_id' => 'unique:users',
+        ]);
+
+        if (!$validator->passes()) {
+            return response()->json(['code' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            $user = new User();
+            $user->name = $request->name;
+            $user->role_id = $request->role_name;
+            $user->password = Hash::make($request->password);
+            $user->email = $request->email;
+            $user->citizenship = $request->citizenship;
+            $user->occupation = $request->occupation;
+            $user->student_id = $request->student_id;
+            $user->address = $request->address;
+            $user->age = $request->age;
+
+            $query = $user->save();
+
+            if (!$query) {
+                return response()->json(['code' => 0, 'msg' => 'Something went wrong']);
+            } else {
+                return response()->json(['code' => 1, 'msg' => 'New User has been successfully saved']);
+            }
+        }
+    }
+
+    //GET editDetails
+    // public function editUser(Request $request)
+    // {
+    //     $userID = $request->route('id');
+    //     $roleDetails = Role::select('role_id', 'role_name')->where('role_id','!=',1)->get();
+    //     $users = User::join('roles', 'users.role_id', '=', 'roles.role_id')
+    //         ->where('users.id',$userID)
+    //         ->get(['users.id','users.name', 'users.role_id', 'roles.role_name', 'roles.role_slug']);
+    //     dd($users);
+    //     return view('super_admin.users.edit', ['roleDetails' => $roleDetails,'userDetails' => $users]);
+    // }
+
+    // DELETE User Details
+    public function deleteUser(Request $request)
+    {
+        // dd($request->id);
+        $id = $request->id;
+        // $query = User::where('id', $id)->delete();
+        $query = User::find($id)->delete();
+
+        if ($query) {
+            return response()->json(['code' => 1, 'msg' => 'User has been deleted from database']);
+        } else {
+            return response()->json(['code' => 0, 'msg' => 'Something went wrong']);
+        }
+    }
+
 }
