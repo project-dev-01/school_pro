@@ -11,8 +11,8 @@
 
             <li class="dropdown notification-list topbar-dropdown">
                 <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                    <img src="{{ asset('images/users/user-1.jpg') }}" alt="user-image" class="rounded-circle">
-                    <span class="pro-user-name ml-1">
+                    <img src="{{asset('users/images').'/'.Auth::user()->picture}}" alt="user-image" class="rounded-circle admin_picture">
+                    <span class="pro-user-name ml-1 user_name">
                     {{ Auth::user()->name }} <i class="mdi mdi-chevron-down"></i>
                     </span>
                 </a>
@@ -29,7 +29,7 @@
                     </a>
 
                     <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                    <a href="{{ route('super_admin.settings') }}" class="dropdown-item notify-item">
                         <i class="fe-settings"></i>
                         <span>Settings</span>
                     </a>

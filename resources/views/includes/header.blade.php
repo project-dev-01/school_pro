@@ -25,6 +25,8 @@
 
     <link href="{{ asset('css/bootstrap-purple-dark.min.css') }}" rel="stylesheet" type="text/css" id="bs-dark-stylesheet" />
     <link href="{{ asset('css/app-purple-dark.min.css') }}" rel="stylesheet" type="text/css" id="app-dark-stylesheet" />
+    <!-- Add croptool plugin -->
+    <link href="{{ asset('ijaboCropTool/ijaboCropTool.min.css') }}" rel="stylesheet" type="text/css" id="app-dark-stylesheet" />
 
     <!-- icons -->
     <link href="{{ asset('css/icons.min.css') }}" rel="stylesheet" type="text/css" />

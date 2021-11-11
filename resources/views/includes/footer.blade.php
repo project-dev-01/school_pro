@@ -43,6 +43,8 @@
 <script src="{{ asset('datatable/js/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('toastr/toastr.min.js') }}"></script>
+<!-- Add croptool plugin -->
+<script src="{{ asset('ijaboCropTool/ijaboCropTool.min.js') }}"></script>
 
 <!-- <script src="{{ asset('js/validation/validation.js') }}"></script> -->
 <script>
@@ -61,9 +63,12 @@
     var userShow = "{{ route('users.user') }}";
     var deleteUser = "{{ route('users.delete') }}";
 
+    // setting routes
+    var pictureUpdateUrl = "{{ route('pictureUpdate') }}";
 
 
 </script>
 <!-- custom js  -->
 <script src="{{ asset('js/custom/classes.js') }}"></script>
 <script src="{{ asset('js/custom/user_list.js') }}"></script>
+<script src="{{ asset('js/custom/settings.js') }}"></script>

@@ -58,6 +58,10 @@ Route::group(['prefix' => 'super_admin', 'middleware' => ['isSuperAdmin', 'auth'
 
     // settings
     Route::get('settings', [SuperAdminController::class, 'settings'])->name('super_admin.settings');
+    Route::post('change-password',[SuperAdminController::class,'changePassword'])->name('changePassword');
+    Route::post('update-profile-info',[SuperAdminController::class,'updateProfileInfo'])->name('updateProfileInfo');
+    Route::post('change-profile-picture',[SuperAdminController::class,'updatePicture'])->name('pictureUpdate');
+
 });
 
 Route::group(['prefix' => 'staff', 'middleware' => ['isStaff', 'auth', 'PreventBackHistory']], function () {
