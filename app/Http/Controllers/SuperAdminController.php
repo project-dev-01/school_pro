@@ -76,6 +76,7 @@ class SuperAdminController extends Controller
         $teacherDetails = User::select('id', 'name')->where('role_id', 3)->get();
         $classID = $request->route('id');
         $editRow = Classes::where('class_id', $classID)->get();
+        // dd($teacherDetails);
         return view('super_admin.classes.edit', ['teacherDetails' => $teacherDetails, 'editClass' => $editRow]);
     }
 

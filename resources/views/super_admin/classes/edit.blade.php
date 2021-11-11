@@ -46,12 +46,10 @@
                                 <select class="form-control" id="teacher_id" name="teacher_id">
                                     <option value="">Choose teacher</option>
                                     @foreach ($teacherDetails as $teacher)
-                                        @if (count($editClass) > 1)
                                         @if($editClass[0]->teacher_id == $teacher->id)
                                         <option value="{{ $teacher->id }}" selected>{{ $teacher->name }}</option>
                                         @else
                                         <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
-                                        @endif
                                         @endif
                                     @endforeach
                                 </select>
