@@ -86,7 +86,7 @@
                                         <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
                                         <label class="form-check-label" for="remember">
-                                            {{ __('Remember Me') }}
+                                            {{ __('Remember Me') }} 
                                         </label>
                                     </div>
                                 </div>
@@ -101,12 +101,11 @@
                     </div>
                     <!-- end card -->
 
-                    <!-- <div class="row mt-3">
+                    <div class="row mt-3">
                         <div class="col-12 text-center">
-                            <p> <a href="auth-recoverpw.html" class="text-white-50 ml-1">Forgot your password?</a></p>
-                            <p class="text-white-50">Don't have an account? <a href="auth-register.html" class="text-white ml-1"><b>Sign Up</b></a></p>
+                            <p> <a href="{{ route('forgotpassword') }}" class="text-white-50 ml-1">Forgot your password?</a></p>
                         </div>
-                    </div> -->
+                    </div>
                     <!-- end row -->
 
                 </div> <!-- end col -->

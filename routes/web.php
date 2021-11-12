@@ -7,6 +7,8 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\ParentController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 use Illuminate\Support\Facades\Auth;
 /*
@@ -33,6 +35,11 @@ Route::middleware(['middleware' => 'PreventBackHistory'])->group(function () {
     // ]);
     Auth::routes();
 });
+
+Route::get('/forgotpassword', [ForgotPasswordController::class, 'forgotpassword'])->name('forgotpassword');
+Route::post('/resetpassword', [ForgotPasswordController::class, 'resetpassword'])->name('resetpassword');
+Route::post('/resetpasswordvalidation', [ResetPasswordController::class, 'resetPasswordValidation'])->name('password.reset');
+
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

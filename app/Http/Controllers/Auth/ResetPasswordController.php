@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
@@ -27,4 +30,32 @@ class ResetPasswordController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
+
+    public function resetPasswordValidation(Request $request)
+    {
+        // dd($request);
+        $validator = $request->validate([
+            'email' => 'required|email|exists:users',
+            'password' => 'required|min:6|confirmed',
+            'password_confirmation' => 'required',
+    
+        ]);
+        // dd($request->token);          
+        $updatePassword = DB::table('password_resets')
+                            ->where(['email' => $request->email, 'token' => $request->token])
+                            ->first();
+                  
+        if($updatePassword)
+        {
+            $user = User::where('email', $request->email)
+                        ->update(['password' => bcrypt($request->password)]);
+    
+            DB::table('password_resets')->where(['email'=> $request->email])->delete();
+    
+            return redirect('/login')->with('success', 'Your password has been changed!');
+    
+        }else{
+            return back()->withInput()->with('error', 'Invalid token!');
+        }
+    }
 }
