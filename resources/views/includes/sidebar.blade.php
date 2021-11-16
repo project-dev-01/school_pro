@@ -53,11 +53,35 @@
                         <span> Dashboards </span>
                     </a>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="{{ route('super_admin.classes')}}" class="nav-link {{ (request()->is('super_admin/classes*')) ? 'active' : '' }}">
                         <i data-feather="clipboard" class="icon-dual"></i>
                         <span> Classes </span>
                     </a>
+                </li> -->
+                <li>
+                    <a href="#sidebarAcademic" data-toggle="collapse">
+                        <i data-feather="home"></i>
+                        <span> Academic </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="sidebarAcademic">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="{{ route('super_admin.section')}}" class="nav-link {{ (request()->is('super_admin/section*')) ? 'active' : '' }}">
+                                    <i data-feather="book-open" class="icon-dual"></i>
+                                    <span> Section </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('super_admin.classes')}}" class="nav-link {{ (request()->is('super_admin/classes*')) ? 'active' : '' }}">
+                                    <i data-feather="clipboard" class="icon-dual"></i>
+                                    <span> Classes </span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
                 </li>
                 <li>
                     <a href="{{ route('users.user')}}" class="nav-link {{ (request()->is('super_admin/users*')) ? 'active' : '' }}">

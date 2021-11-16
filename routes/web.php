@@ -54,6 +54,7 @@ Route::group(['prefix' => 'super_admin', 'middleware' => ['isSuperAdmin', 'auth'
     Route::get('classes/edit/{id}', [SuperAdminController::class, 'editClass'])->name('classes.edit');
     Route::post('classes/update', [SuperAdminController::class, 'updateClass'])->name('classes.update');
     Route::post('classes/delete', [SuperAdminController::class, 'deleteClass'])->name('classes.delete');
+    Route::post('classes/class-details',[SuperAdminController::class, 'getClassDetails'])->name('classes.details');
 
     // userlist routes
     Route::get('users/user', [SuperAdminController::class, 'users'])->name('users.user');
@@ -68,6 +69,13 @@ Route::group(['prefix' => 'super_admin', 'middleware' => ['isSuperAdmin', 'auth'
     Route::post('change-password',[SuperAdminController::class,'changePassword'])->name('changePassword');
     Route::post('update-profile-info',[SuperAdminController::class,'updateProfileInfo'])->name('updateProfileInfo');
     Route::post('change-profile-picture',[SuperAdminController::class,'updatePicture'])->name('pictureUpdate');
+    // section routes
+    Route::get('section/index', [SuperAdminController::class, 'section'])->name('super_admin.section');
+    Route::post('section/add',[SuperAdminController::class,'addSection'])->name('section.add');
+    Route::get('section/list', [SuperAdminController::class, 'getSectionList'])->name('section.list');
+    Route::post('section/section-details',[SuperAdminController::class, 'getSectionDetails'])->name('section.details');
+    Route::post('section/update',[SuperAdminController::class, 'updateSectionDetails'])->name('section.update');
+    Route::post('section/delete', [SuperAdminController::class, 'deleteSection'])->name('section.delete');
 
 });
 

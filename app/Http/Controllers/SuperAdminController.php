@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Classes;
 use App\Models\Role;
+use App\Models\Section;
 use App\Models\User;
 use Illuminate\Http\Request;
 use DataTables;
@@ -13,26 +14,26 @@ use Illuminate\Support\Facades\Auth;
 class SuperAdminController extends Controller
 {
     //
-    function index()
+    public function index()
     {
         return view('super_admin.dashboard.index');
     }
-    function settings()
+    public function settings()
     {
         return view('super_admin.settings.index');
     }
-    function classes()
+    public function classes()
     {
         return view('super_admin.classes.index');
     }
-    function addClasses()
+    public function addClasses()
     {
         $teacherDetails = User::select('id', 'name')->where('role_id', 3)->get();
         return view('super_admin.classes.add', ['teacherDetails' => $teacherDetails]);
     }
 
     // update profile info
-    function updateProfileInfo(Request $request){
+    public function updateProfileInfo(Request $request){
         // dd($request->address);
  
         $validator = \Validator::make($request->all(),[
@@ -58,7 +59,7 @@ class SuperAdminController extends Controller
     }
 
     // update profile picture
-    function updatePicture(Request $request){
+    public function updatePicture(Request $request){
         
         $path = 'users/images/';
         $file = $request->file('admin_image');
@@ -91,7 +92,7 @@ class SuperAdminController extends Controller
     }
 
     // change password
-    function changePassword(Request $request){
+    public function changePassword(Request $request){
         //Validate form
         $validator = \Validator::make($request->all(),[
             'oldpassword'=>[
@@ -133,16 +134,16 @@ class SuperAdminController extends Controller
     public function addClass(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'classes' => 'required|unique:classes',
-            'teacher_id' => 'required',
+            'name' => 'required|unique:classes',
+            'name_numeric' => 'required',
         ]);
 
         if (!$validator->passes()) {
             return response()->json(['code' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
             $class = new Classes();
-            $class->classes = $request->classes;
-            $class->teacher_id = $request->teacher_id;
+            $class->name = $request->name;
+            $class->name_numeric = $request->name_numeric;
             $query = $class->save();
 
             if (!$query) {
@@ -152,32 +153,30 @@ class SuperAdminController extends Controller
             }
         }
     }
+
+    // get class row details
+    public function getClassDetails(Request $request){
+        $class_id = $request->class_id;
+        $classDetails = Classes::find($class_id);
+        return response()->json(['details'=>$classDetails]);
+    }
+
     // get class details
     public function getClassList(Request $request)
     {
-        // $classes = Classes::all();
-        $classes = Classes::join('users', 'classes.teacher_id', '=', 'users.id')
-            ->get(['classes.classes', 'classes.class_id', 'classes.teacher_id', 'users.role_id', 'users.name']);
+        $classes = Classes::all();
+        
         return DataTables::of($classes)
             ->addIndexColumn()
             ->addColumn('actions', function ($row) {
                 return '<div class="button-list">
-                                <a href="' . route('classes.edit', $row['class_id']) . '" class="btn btn-blue waves-effect waves-light" data-id="' . $row['class_id'] . '">Update</a>
-                                <a href="javascript:void(0)" class="btn btn-danger waves-effect waves-light" data-id="' . $row['class_id'] . '" id="deleteClassBtn">Delete</a>
+                                <a href="javascript:void(0)" class="btn btn-blue waves-effect waves-light" data-id="' . $row['id'] . '" id="editClassBtn">Update</a>
+                                <a href="javascript:void(0)" class="btn btn-danger waves-effect waves-light" data-id="' . $row['id'] . '" id="deleteClassBtn">Delete</a>
                         </div>';
             })
-            ->rawColumns(['actions', 'checkbox'])
-            ->make(true);
-    }
-    //GET Class detail
-    public function editClass(Request $request)
-    {
 
-        $teacherDetails = User::select('id', 'name')->where('role_id', 3)->get();
-        $classID = $request->route('id');
-        $editRow = Classes::where('class_id', $classID)->get();
-        // dd($teacherDetails);
-        return view('super_admin.classes.edit', ['teacherDetails' => $teacherDetails, 'editClass' => $editRow]);
+            ->rawColumns(['actions'])
+            ->make(true);
     }
 
     //UPDATE Class DETAILS
@@ -187,16 +186,19 @@ class SuperAdminController extends Controller
         $classID = $request->class_id;
 
         $validator = \Validator::make($request->all(), [
-            'classes' => 'required',
-            'teacher_id' => 'required',
+            'name' => 'required',
+            'name_numeric' => 'required',
         ]);
 
         if (!$validator->passes()) {
             return response()->json(['code' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
 
-            $query = Classes::where('class_id', $classID)
-                ->update(['classes' => $request->classes, 'teacher_id' => $request->teacher_id]);
+            $class = Classes::find($classID);
+            $class->name = $request->name;
+            $class->name_numeric = $request->name_numeric;
+            $query = $class->save();
+
             if ($query) {
                 return response()->json(['code' => 1, 'msg' => 'Class Details have Been updated']);
             } else {
@@ -209,17 +211,18 @@ class SuperAdminController extends Controller
     public function deleteClass(Request $request)
     {
         $classID = $request->class_id;
-        $query = Classes::where('class_id', $classID)->delete();
+        Classes::where('id', $classID)->delete();
+        return response()->json(['code'=>1, 'msg'=>'Class have been deleted from database']); 
 
-        if ($query) {
-            return response()->json(['code' => 1, 'msg' => 'Class has been deleted from database']);
-        } else {
-            return response()->json(['code' => 0, 'msg' => 'Something went wrong']);
-        }
+        // if ($query) {
+        //     return response()->json(['code' => 1, 'msg' => 'Class has been deleted from database']);
+        // } else {
+        //     return response()->json(['code' => 0, 'msg' => 'Something went wrong']);
+        // }
     }
 
     // users page
-    function users()
+    public function users()
     {
         return view('super_admin.users.index');
     }
@@ -227,8 +230,6 @@ class SuperAdminController extends Controller
     // get users details
     public function getUserList(Request $request)
     {
-        // $users = User::all();
-        // dd($users);
         $users = User::join('roles', 'users.role_id', '=', 'roles.role_id')
             ->where('users.role_id','!=',1)
             ->get(['users.id','users.name', 'users.role_id', 'roles.role_name', 'roles.role_slug']);
@@ -240,19 +241,18 @@ class SuperAdminController extends Controller
                                 <a href="javascript:void(0)" class="btn btn-danger waves-effect waves-light" data-id="' . $row['id'] . '" id="deleteUserBtn">Delete</a>
                         </div>';
             })
-            // <a href="' . route('users.edit', $row['id']) . '" class="btn btn-blue waves-effect waves-light" data-id="' . $row['id'] . '">Update</a>
 
             ->rawColumns(['actions', 'checkbox'])
             ->make(true);
     }
     // show user page
-    function addUsers()
+    public function addUsers()
     {
         $roleDetails = Role::select('role_id', 'role_name')->where('role_id','!=',1)->get();
         return view('super_admin.users.add', ['roleDetails' => $roleDetails]);
     }
     // add roleUser
-    function addRoleUser(Request $request){
+    public function addRoleUser(Request $request){
 
         $validator = \Validator::make($request->all(), [
             'name' => 'required',
@@ -286,24 +286,10 @@ class SuperAdminController extends Controller
         }
     }
 
-    //GET editDetails
-    // public function editUser(Request $request)
-    // {
-    //     $userID = $request->route('id');
-    //     $roleDetails = Role::select('role_id', 'role_name')->where('role_id','!=',1)->get();
-    //     $users = User::join('roles', 'users.role_id', '=', 'roles.role_id')
-    //         ->where('users.id',$userID)
-    //         ->get(['users.id','users.name', 'users.role_id', 'roles.role_name', 'roles.role_slug']);
-    //     dd($users);
-    //     return view('super_admin.users.edit', ['roleDetails' => $roleDetails,'userDetails' => $users]);
-    // }
-
     // DELETE User Details
     public function deleteUser(Request $request)
     {
-        // dd($request->id);
         $id = $request->id;
-        // $query = User::where('id', $id)->delete();
         $query = User::find($id)->delete();
 
         if ($query) {
@@ -313,4 +299,83 @@ class SuperAdminController extends Controller
         }
     }
 
+    // get section
+    public function section()
+    {
+        return view('super_admin.section.index');
+    }
+    // add section
+    public function addSection(Request $request){
+
+        $validator = \Validator::make($request->all(),[
+            'name'=>'required|unique:sections'
+        ]);
+
+        if(!$validator->passes()){
+             return response()->json(['code'=>0,'error'=>$validator->errors()->toArray()]);
+        }else{
+            $section = new Section();
+            $section->name = $request->name;
+            $query = $section->save();
+
+            if(!$query){
+                return response()->json(['code'=>0,'msg'=>'Something went wrong']);
+            }else{
+                return response()->json(['code'=>1,'msg'=>'New Section has been successfully saved']);
+            }
+        }
+    }
+
+    // get sections 
+    public function getSectionList(Request $request)
+    {
+        $section = Section::all();
+        return DataTables::of($section)
+            ->addIndexColumn()
+            ->addColumn('actions', function ($row) {
+                return '<div class="button-list">
+                                <a href="javascript:void(0)" class="btn btn-blue waves-effect waves-light" data-id="' . $row['id'] . '" id="editSectionBtn">Update</a>
+                                <a href="javascript:void(0)" class="btn btn-danger waves-effect waves-light" data-id="' . $row['id'] . '" id="deleteSectionBtn">Delete</a>
+                        </div>';
+            })
+
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
+
+    // get section row details
+    public function getSectionDetails(Request $request){
+        $section_id = $request->section_id;
+        $sectionDetails = Section::find($section_id);
+        return response()->json(['details'=>$sectionDetails]);
+    }
+    // update section
+    public function updateSectionDetails(Request $request){
+        $section_id = $request->sid;
+
+        $validator = \Validator::make($request->all(),[
+            'name'=>'required|unique:sections,name,'.$section_id
+        ]);
+
+        if(!$validator->passes()){
+               return response()->json(['code'=>0,'error'=>$validator->errors()->toArray()]);
+        }else{
+             
+            $section = Section::find($section_id);
+            $section->name = $request->name;
+            $query = $section->save();
+
+            if($query){
+                return response()->json(['code'=>1, 'msg'=>'Section Details have Been updated']);
+            }else{
+                return response()->json(['code'=>0, 'msg'=>'Something went wrong']);
+            }
+        }
+    }
+    // delete Section
+    public function deleteSection(Request $request){
+        $section_id = $request->section_id;
+        Section::where('id', $section_id)->delete();
+        return response()->json(['code'=>1, 'msg'=>'Section have been deleted from database']); 
+     }
 }

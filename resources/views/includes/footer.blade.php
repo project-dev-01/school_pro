@@ -58,6 +58,8 @@
     var classList = "{{ route('classes.list') }}";
     var classes = "{{ route('super_admin.classes')}}";
     var deleteClasses = "{{ route('classes.delete')}}";
+    var classDetails = "{{ route('classes.details') }}";
+
     // users routes
     var userList = "{{ route('users.user_list') }}";
     var userShow = "{{ route('users.user') }}";
@@ -65,10 +67,14 @@
 
     // setting routes
     var pictureUpdateUrl = "{{ route('pictureUpdate') }}";
-
+    // section routes
+    var sectionList = "{{ route('section.list') }}";
+    var sectionDetails = "{{ route('section.details') }}";
+    var sectionDelete = "{{ route('section.delete') }}";
 
 </script>
 <!-- custom js  -->
 <script src="{{ asset('js/custom/classes.js') }}"></script>
 <script src="{{ asset('js/custom/user_list.js') }}"></script>
 <script src="{{ asset('js/custom/settings.js') }}"></script>
+<script src="{{ asset('js/custom/section.js') }}"></script>
