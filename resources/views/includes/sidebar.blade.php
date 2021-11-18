@@ -69,17 +69,24 @@
                         <ul class="nav-second-level">
                             <li>
                                 <a href="{{ route('super_admin.section')}}" class="nav-link {{ (request()->is('super_admin/section*')) ? 'active' : '' }}">
-                                    <i data-feather="book-open" class="icon-dual"></i>
                                     <span> Section </span>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('super_admin.classes')}}" class="nav-link {{ (request()->is('super_admin/classes*')) ? 'active' : '' }}">
-                                    <i data-feather="clipboard" class="icon-dual"></i>
                                     <span> Classes </span>
                                 </a>
                             </li>
-
+                            <li>
+                                <a href="{{ route('super_admin.section_allocation')}}" class="nav-link {{ (request()->is('super_admin/section_allocation*')) ? 'active' : '' }}">
+                                    <span> Sections Allocation </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('super_admin.assign_teacher')}}" class="nav-link {{ (request()->is('super_admin/assign_teacher*')) ? 'active' : '' }}">
+                                    <span> Assign Class Teacher </span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>

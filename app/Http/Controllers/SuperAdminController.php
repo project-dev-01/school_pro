@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Classes;
 use App\Models\Role;
 use App\Models\Section;
+use App\Models\SectionAllocation;
+use App\Models\TeacherAllocation;
 use App\Models\User;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
 class SuperAdminController extends Controller
 {
     //
@@ -377,5 +379,171 @@ class SuperAdminController extends Controller
         $section_id = $request->section_id;
         Section::where('id', $section_id)->delete();
         return response()->json(['code'=>1, 'msg'=>'Section have been deleted from database']); 
-     }
+    }
+
+     // section allocations
+    public function showSectionAllocation(){
+        $classDetails = Classes::select('id', 'name')->get();
+        $sectionDetails = Section::select('id', 'name')->get();
+        return view('super_admin.section_allocation.allocation', ['classDetails' => $classDetails,'sectionDetails' => $sectionDetails]);
+    }
+
+    // add section allocations
+    public function addSectionAllocation(Request $request){
+
+        $validator = \Validator::make($request->all(),[
+            'class_name'=>'required',
+            'section_name'=>'required'
+        ]);
+
+        if(!$validator->passes()){
+             return response()->json(['code'=>0,'error'=>$validator->errors()->toArray()]);
+        }else{
+            $section = new SectionAllocation();
+            $section->class_id = $request->class_name;
+            $section->section_id = $request->section_name;
+            $query = $section->save();
+
+            if(!$query){
+                return response()->json(['code'=>0,'msg'=>'Something went wrong']);
+            }else{
+                return response()->json(['code'=>1,'msg'=>'Section Allocation has been successfully saved']);
+            }
+        }
+    }
+    // get sections allocation
+    public function getSectionAllocationList(Request $request)
+    {
+        $sectionAllocation = DB::table('sections_allocations as sa')
+            ->select('sa.id','sa.class_id','sa.section_id','s.name as section_name','c.name as class_name','c.name_numeric')
+            ->join('sections as s', 'sa.section_id', '=', 's.id')
+            ->join('classes as c', 'sa.class_id', '=', 'c.id')
+            ->get();
+
+        return DataTables::of($sectionAllocation)
+            ->addIndexColumn()
+            ->addColumn('actions', function ($row) {
+                return '<div class="button-list">
+                                <a href="javascript:void(0)" class="btn btn-blue waves-effect waves-light" data-id="' . $row->id . '" id="editSectionAlloBtn">Update</a>
+                                <a href="javascript:void(0)" class="btn btn-danger waves-effect waves-light" data-id="' . $row->id . '" id="deleteSectionAlloBtn">Delete</a>
+                        </div>';
+            })
+
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
+
+    // get getSectionAllocationDetails details
+
+    public function getSectionAllocationDetails(Request $request){
+        $id = $request->id;
+        $SectionAllocation = SectionAllocation::find($id);
+        return response()->json(['details'=>$SectionAllocation]);
+    }
+
+    // update Section Allocations
+
+    public function updateSectionAllocation(Request $request){
+        $id = $request->said;
+
+        $validator = \Validator::make($request->all(),[
+            'class_name'=>'required',
+            'section_name'=>'required'
+        ]);
+
+        if(!$validator->passes()){
+               return response()->json(['code'=>0,'error'=>$validator->errors()->toArray()]);
+        }else{
+
+            $section = SectionAllocation::find($id);
+            $section->class_id = $request->class_name;
+            $section->section_id = $request->section_name;
+            $query = $section->save();
+
+            if($query){
+                return response()->json(['code'=>1, 'msg'=>'Section Allocation Details have Been updated']);
+            }else{
+                return response()->json(['code'=>0, 'msg'=>'Something went wrong']);
+            }
+        }
+    }
+
+    // delete deleteSectionAllocation
+    public function deleteSectionAllocation(Request $request){
+        $id = $request->id;
+        SectionAllocation::where('id', $id)->delete();
+        return response()->json(['code'=>1, 'msg'=>'Section Allocation have been deleted from database']); 
+    }
+
+    // show assign teacher
+
+    public function showAssignTeacher(){
+        $classDetails = Classes::select('id', 'name')->get();
+        $teacherDetails = User::select('id', 'name')->where('role_id', 3)->get();
+        return view('super_admin.assign_teacher.index', ['classDetails' => $classDetails,'teacherDetails' => $teacherDetails]);
+    }
+    // get allocation section
+
+    public function getAllocationSection(Request $request){
+        $class_id = $request->class_id;
+
+        $classDetails = DB::table('sections_allocations as sa')
+            ->select('sa.id','sa.class_id','sa.section_id','s.name as section_name')
+            ->join('sections as s', 'sa.section_id', '=', 's.id')
+            ->where('sa.class_id', $class_id)
+            ->get();
+            
+        return response()->json(['code'=>1, 'data'=>$classDetails]); 
+    }
+
+    // add section allocations
+    public function addTeacherAllocation(Request $request){
+
+        $validator = \Validator::make($request->all(),[
+            'class_name'=>'required',
+            'section_name'=>'required',
+            'class_teacher'=>'required'
+        ]);
+
+        if(!$validator->passes()){
+             return response()->json(['code'=>0,'error'=>$validator->errors()->toArray()]);
+        }else{
+
+            $teacherAllocation = new TeacherAllocation();
+            $teacherAllocation->class_id = $request->class_name;
+            $teacherAllocation->section_id = $request->section_name;
+            $teacherAllocation->teacher_id = $request->class_teacher;
+            $query = $teacherAllocation->save();
+
+            if(!$query){
+                return response()->json(['code'=>0,'msg'=>'Something went wrong']);
+            }else{
+                return response()->json(['code'=>1,'msg'=>'Teacher Allocation has been successfully saved']);
+            }
+        }
+    }
+
+    // get Teacher Allocation List
+
+    public function getTeacherAllocationList(Request $request)
+    {
+        $teacherAllocation = DB::table('teacher_allocations as ta')
+            ->select('ta.id','ta.class_id','ta.section_id','ta.teacher_id','s.name as section_name','c.name as class_name','u.name as teacher_name')
+            ->join('sections as s', 'ta.section_id', '=', 's.id')
+            ->join('classes as c', 'ta.class_id', '=', 'c.id')
+            ->join('users as u', 'ta.teacher_id', '=', 'u.id')
+            ->get();
+
+        return DataTables::of($teacherAllocation)
+            ->addIndexColumn()
+            ->addColumn('actions', function ($row) {
+                return '<div class="button-list">
+                                <a href="javascript:void(0)" class="btn btn-blue waves-effect waves-light" data-id="' . $row->id . '" id="editTeacherAlloBtn">Update</a>
+                                <a href="javascript:void(0)" class="btn btn-danger waves-effect waves-light" data-id="' . $row->id . '" id="deleteTeacherAlloBtn">Delete</a>
+                        </div>';
+            })
+
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
 }

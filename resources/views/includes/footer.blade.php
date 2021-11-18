@@ -71,10 +71,19 @@
     var sectionList = "{{ route('section.list') }}";
     var sectionDetails = "{{ route('section.details') }}";
     var sectionDelete = "{{ route('section.delete') }}";
+    // section allocation routes
+    var sectionAllocationList = "{{ route('section_allocation.list') }}";
+    var sectionAllocationDetails = "{{ route('section_allocation.details') }}";
+    var sectionAllocationDelete = "{{ route('section_allocation.delete') }}";
+    // assign teacher routes
+    var getsectionAllocation = "{{ route('assign_teacher.get_allocation_section') }}";
+    var assignTeacherList = "{{ route('assign_teacher.list') }}";
 
+    
 </script>
 <!-- custom js  -->
 <script src="{{ asset('js/custom/classes.js') }}"></script>
 <script src="{{ asset('js/custom/user_list.js') }}"></script>
 <script src="{{ asset('js/custom/settings.js') }}"></script>
 <script src="{{ asset('js/custom/section.js') }}"></script>
+<script src="{{ asset('js/custom/assign_teacher.js') }}"></script>

@@ -77,6 +77,20 @@ Route::group(['prefix' => 'super_admin', 'middleware' => ['isSuperAdmin', 'auth'
     Route::post('section/update',[SuperAdminController::class, 'updateSectionDetails'])->name('section.update');
     Route::post('section/delete', [SuperAdminController::class, 'deleteSection'])->name('section.delete');
 
+    // sections allocations routes
+    Route::get('allocate_section/index', [SuperAdminController::class, 'showSectionAllocation'])->name('super_admin.section_allocation');
+    Route::post('allocate_section/add',[SuperAdminController::class,'addSectionAllocation'])->name('section_allocation.add');
+    Route::get('allocate_section/list', [SuperAdminController::class, 'getSectionAllocationList'])->name('section_allocation.list');
+    Route::post('allocate_section/section_allocation-details',[SuperAdminController::class, 'getSectionAllocationDetails'])->name('section_allocation.details');
+    Route::post('allocate_section/update',[SuperAdminController::class, 'updateSectionAllocation'])->name('section_allocation.update');
+    Route::post('allocate_section/delete', [SuperAdminController::class, 'deleteSectionAllocation'])->name('section_allocation.delete');
+    // assign_teacher routes
+    Route::get('assign_teacher/index', [SuperAdminController::class, 'showAssignTeacher'])->name('super_admin.assign_teacher');
+    Route::post('assign_teacher/get_allocation_section', [SuperAdminController::class, 'getAllocationSection'])->name('assign_teacher.get_allocation_section');
+    Route::post('assign_teacher/add', [SuperAdminController::class, 'addTeacherAllocation'])->name('assign_teacher.add');
+    Route::get('assign_teacher/list', [SuperAdminController::class, 'getTeacherAllocationList'])->name('assign_teacher.list');
+
+    
 });
 
 Route::group(['prefix' => 'staff', 'middleware' => ['isStaff', 'auth', 'PreventBackHistory']], function () {

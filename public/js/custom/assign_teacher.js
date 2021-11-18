@@ -1,0 +1,104 @@
+$(function () {
+
+    // change section filter
+
+    $("#classNameFilter").on('change', function (e) {
+        e.preventDefault();
+        var class_id = $(this).val();
+        var formData = new FormData();
+        formData.append('class_id', class_id);
+        if (class_id) {
+            $.ajax({
+                url:getsectionAllocation,
+                method:"post",
+                data:formData,
+                processData:false,
+                dataType:'json',
+                contentType:false,
+                success: function (res) {
+                    if(res.code == 1){
+                        $('.addAssignTeachernModal').find("#section_name").empty();
+                        $('.addAssignTeachernModal').find("#section_name").append('<option value="">Choose Section</option>');
+                        $.each(res.data, function(key, val){
+                            $('.addAssignTeachernModal').find("#section_name").append('<option value="' + val.section_id + '">' + val.section_name + '</option>');
+                        });
+                    }
+                }
+
+            });
+        }
+    });
+
+    // save assign teacher
+    $('#addAssignTeacherForm').on('submit', function(e){
+        e.preventDefault();
+        var form = this;
+        $.ajax({
+            url:$(form).attr('action'),
+            method:$(form).attr('method'),
+            data:new FormData(form),
+            processData:false,
+            dataType:'json',
+            contentType:false,
+            beforeSend: function(){
+                 $(form).find('span.error-text').text('');
+            },
+            success: function(data){
+                  if(data.code == 0){
+                      $.each(data.error, function(prefix, val){
+                          $(form).find('span.'+prefix+'_error').text(val[0]);
+                      });
+                  }else{
+                      $('#assign-teacher-table').DataTable().ajax.reload(null, false);
+                      $('.addAssignTeachernModal').modal('hide');
+                      $('.addAssignTeachernModal').find('form')[0].reset();
+                      toastr.success(data.msg);
+                  }
+            }
+        });
+    });
+
+    // get all assign teacher table
+    var table = $('#assign-teacher-table').DataTable({
+        processing: true,
+        info: true,
+        ajax: assignTeacherList,
+        "pageLength": 5,
+        "aLengthMenu": [
+            [5, 10, 25, 50, -1],
+            [5, 10, 25, 50, "All"]
+        ],
+        columns: [
+            //  {data:'id', name:'id'},
+            // {
+            //     data: 'checkbox',
+            //     name: 'checkbox',
+            //     orderable: false,
+            //     searchable: false
+            // },
+            {
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'class_name',
+                name: 'class_name'
+            },
+            {
+                data: 'section_name',
+                name: 'section_name'
+            },
+            {
+                data: 'teacher_name',
+                name: 'teacher_name'
+            },
+            {
+                data: 'actions',
+                name: 'actions',
+                orderable: false,
+                searchable: false
+            },
+        ]
+    }).on('draw', function () {
+    });
+});
